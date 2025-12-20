@@ -1,4 +1,4 @@
 package learning.spring.forproizvodsta.Repository.Entity;
 
-public class Parent {
+public class User {
 }

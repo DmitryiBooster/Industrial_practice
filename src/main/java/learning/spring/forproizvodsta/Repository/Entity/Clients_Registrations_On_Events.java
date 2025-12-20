@@ -1,4 +1,4 @@
 package learning.spring.forproizvodsta.Repository.Entity;
 
-public class Event {
+public class Clients_Registrations_On_Events {
 }

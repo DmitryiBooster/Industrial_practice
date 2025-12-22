@@ -49,7 +49,9 @@ public class Events {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(
-            name = "fk_id_teacher"
+            name = "fk_id_teacher",
+            referencedColumnName = "id",
+            nullable = false
     )
     private User teacher;
 

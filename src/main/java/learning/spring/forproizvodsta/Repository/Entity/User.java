@@ -79,4 +79,12 @@ public class User {
 
     public User() {
     }
+
+    public boolean isTeacher() {
+        return role != null && "TEACHER".equals(role.getRole());
+    }
+
+    public boolean isClient() {
+        return role != null && "CLIENT".equals(role.getRole());
+    }
 }

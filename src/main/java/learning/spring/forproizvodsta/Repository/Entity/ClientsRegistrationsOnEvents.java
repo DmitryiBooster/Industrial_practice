@@ -45,12 +45,6 @@ public class ClientsRegistrationsOnEvents {
     @CreationTimestamp
     private LocalDateTime registrationDate;
 
-    public ClientsRegistrationsOnEvents(Events fkIdEvent, User fkIdUser, LocalDateTime registrationDate) {
-        this.event = fkIdEvent;
-        this.user = fkIdUser;
-        this.registrationDate = registrationDate;
-    }
-
     public ClientsRegistrationsOnEvents() {
     }
 

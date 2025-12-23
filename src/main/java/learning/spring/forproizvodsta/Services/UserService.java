@@ -6,19 +6,19 @@ import learning.spring.forproizvodsta.DTO.TeacherCreateDTO;
 import learning.spring.forproizvodsta.DTO.TeacherUpdateDTO;
 import learning.spring.forproizvodsta.DTO.UserCreateDTO;
 import learning.spring.forproizvodsta.DTO.UserUpdateDTO;
+import learning.spring.forproizvodsta.MyExceptions.DuplicateEmailException;
+import learning.spring.forproizvodsta.MyExceptions.DuplicatePhoneException;
 import learning.spring.forproizvodsta.Repository.Entity.Role;
 import learning.spring.forproizvodsta.Repository.Entity.RoleRepository;
 import learning.spring.forproizvodsta.Repository.Entity.User;
 import learning.spring.forproizvodsta.Repository.Entity.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import learning.spring.forproizvodsta.MyExceptions.AccessDeniedException;
 import org.hibernate.sql.results.jdbc.internal.JdbcValuesResultSetImpl;
 import org.springframework.stereotype.Service;
-
-import javax.management.relation.RoleNotFoundException;
-import java.nio.file.AccessDeniedException;
-import java.util.ArrayList;
+import learning.spring.forproizvodsta.MyExceptions.RoleNotFoundException;
 import java.util.List;
-import java.util.Optional;
+
 
 /**
  * Какой должен быть функционал:
@@ -60,7 +60,9 @@ public class UserService {
                 dto.getFirstName(),
                 dto.getLastName(),
                 dto.getAge(),
-                dto.getEmail()
+                dto.getEmail(),
+                clientRole
+
         );
 
         user.setPhone(dto.getPhone());
@@ -74,7 +76,7 @@ public class UserService {
     public User createTeacher(TeacherCreateDTO dto) {
         log.info("Создание учителя с email: {}", dto.getEmail());
 
-        validateNewUser(dto);
+        validateNewTeacher(dto);
 
         Role teacherRole = roleRepository.findByRole("TEACHER")
                 .orElseThrow(() -> new RoleNotFoundException("Пользователь с ролью 'TEACHER' не был найден"));
@@ -83,7 +85,8 @@ public class UserService {
                 dto.getFirstName(),
                 dto.getLastName(),
                 dto.getAge(),
-                dto.getEmail()
+                dto.getEmail(),
+                teacherRole
         );
         user.setPhone(dto.getPhone());
         user.setEducational(dto.getEducational());    // специальное поле для учителя
@@ -107,7 +110,8 @@ public class UserService {
                 dto.getFirstName(),
                 dto.getLastName(),
                 dto.getAge(),
-                dto.getEmail()
+                dto.getEmail(),
+                adminRole
         );
         user.setPhone(dto.getPhone());
         user.setRole(adminRole);
@@ -264,6 +268,22 @@ public class UserService {
 
 
     private void validateNewUser(UserCreateDTO dto) {
+        if (userRepository.existsByEmail(dto.getEmail())) {
+            throw new DuplicateEmailException("Email уже зарегистрирован");
+        }
+
+        if (dto.getPhone() != null &&
+                userRepository.existsByPhone(dto.getPhone())) {
+            throw new DuplicatePhoneException("Номер телефона уже зарегистрирован");
+        }
+
+        validationService.validateEmail(dto.getEmail());
+        if (dto.getPhone() != null) {
+            validationService.validatePhone(dto.getPhone());
+        }
+    }
+
+    private void validateNewTeacher(TeacherCreateDTO dto) {
         if (userRepository.existsByEmail(dto.getEmail())) {
             throw new DuplicateEmailException("Email уже зарегистрирован");
         }

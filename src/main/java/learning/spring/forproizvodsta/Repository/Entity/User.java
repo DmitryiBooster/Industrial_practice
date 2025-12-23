@@ -70,11 +70,12 @@ public class User {
         this.role = role;
     }
 
-    public User(String firstName, String lastName, int age, String email) {
+    public User(String firstName, String lastName, int age, String email, Role role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
         this.email = email;
+        this.role = role;
     }
 
     public User() {
@@ -86,5 +87,9 @@ public class User {
 
     public boolean isClient() {
         return role != null && "CLIENT".equals(role.getRole());
+    }
+
+    public boolean isAdmin() {
+        return role != null && "ADMIN".equals(role.getRole());
     }
 }

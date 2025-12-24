@@ -49,11 +49,9 @@ public class CourseUpdateDTO {
         this.startDate = startDate;
     }
 
-    // ✅ БЕЗ ПРОВЕРКИ @FutureOrPresent для даты!
     @NotNull(message = "Start date cannot be null")
     private String startDate;  // Строка, не LocalDate
 
-    // GETTERS & SETTERS
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
 

@@ -66,7 +66,6 @@ public class CourseController {
         course.setPrice(courseDTO.getPrice());
         course.setMaxStudents(courseDTO.getMaxStudents());
 
-        // Преобразуем строку в LocalDate БЕЗ проверок
         LocalDate startDate = LocalDate.parse(courseDTO.getStartDate());
         course.setStartDate(startDate);
 

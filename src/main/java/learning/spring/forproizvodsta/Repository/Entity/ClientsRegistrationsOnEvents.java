@@ -1,0 +1,87 @@
+package learning.spring.forproizvodsta.Repository.Entity;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
+
+@Getter
+@Setter
+
+@Entity
+@Table(
+        name = "clients_registrations_on_events",
+        schema = "public",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"fk_id_events", "fk_id_user"})
+
+)
+public class ClientsRegistrationsOnEvents {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    //___
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(
+            name = "fk_id_events",
+            referencedColumnName = "id",
+            nullable = false
+    )
+    private Events event;
+    //___
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(
+            name = "fk_id_user",
+            referencedColumnName = "id",
+            nullable = false
+    )
+    private User user;
+    //___
+    @Column(
+            name = "registration_date",
+            columnDefinition = "TIMESTAMP")
+    @CreationTimestamp
+    private LocalDateTime registrationDate;
+
+    public ClientsRegistrationsOnEvents() {
+    }
+
+    public ClientsRegistrationsOnEvents(Events event, User user) {
+        this.event = event;
+        this.user = user;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public Events getEvent() {
+        return event;
+    }
+
+    public void setEvent(Events event) {
+        this.event = event;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public LocalDateTime getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(LocalDateTime registrationDate) {
+        this.registrationDate = registrationDate;
+    }
+}

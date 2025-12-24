@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление Курсами</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+            'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+            sans-serif;
+            background: linear-gradient(135deg, #f0f4f8 0%, #e8f1f7 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #1a1a1a;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            margin-bottom: 40px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 600;
+            color: #0052cc;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        /* ФОРМА СОЗДАНИЯ КУРСА */
+        .form-section {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .form-section h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #1a1a1a;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d0d0d0;
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            background: white;
+            border-color: #0052cc;
+            box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #0052cc 0%, #0040a3 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 82, 204, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-danger {
+            background: #ffe8e8;
+            color: #cc0000;
+        }
+
+        .btn-danger:hover {
+            background: #ffd0d0;
+        }
+
+        /* СПИСОК КУРСОВ */
+        .courses-section {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .courses-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .courses-header h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .search-filter {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-filter input {
+            flex: 1;
+            padding: 10px 12px;
+            border: 1px solid #d0d0d0;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+        .courses-grid {
+            display: grid;
+            gap: 16px;
+        }
+
+        .course-card {
+            background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
+            border: 1px solid #dde8f5;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .course-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 82, 204, 0.12);
+            border-color: #0052cc;
+        }
+
+        .course-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .course-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0052cc;
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        .course-price {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0052cc;
+            white-space: nowrap;
+        }
+
+        .course-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .meta-label {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .course-description {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .course-footer {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-small {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-edit {
+            background: #e8f0ff;
+            color: #0052cc;
+            border: 1px solid #d0dff5;
+        }
+
+        .btn-edit:hover {
+            background: #d0dff5;
+        }
+
+        .btn-delete {
+            background: #ffe8e8;
+            color: #cc0000;
+            border: 1px solid #ffd0d0;
+        }
+
+        .btn-delete:hover {
+            background: #ffd0d0;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .error-message {
+            background: #ffe8e8;
+            border: 1px solid #ffd0d0;
+            color: #cc0000;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            display: none;
+        }
+
+        .success-message {
+            background: #e8ffe8;
+            border: 1px solid #d0ffd0;
+            color: #008000;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            display: none;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            background: rgba(0, 82, 204, 0.1);
+            color: #0052cc;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .editing-badge {
+            background: #fff3cd;
+            color: #856404;
+            padding: 8px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .form-section {
+                position: static;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .course-meta {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- HEADER -->
+    <header>
+        <h1>📚 Управление Курсами</h1>
+        <p class="subtitle">Платформа для управления образовательными курсами</p>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <!-- ФОРМА -->
+        <div class="form-section">
+            <h2 id="formTitle">➕ Добавить Курс</h2>
+
+            <div class="editing-badge" id="editingBadge">
+                ✏️ Редактирование курса #<span id="editingId"></span>
+            </div>
+
+            <div id="errorMessage" class="error-message"></div>
+            <div id="successMessage" class="success-message"></div>
+
+            <form id="courseForm">
+                <div class="form-group">
+                    <label for="title">Название курса*</label>
+                    <input type="text" id="title" name="title" required placeholder="Например: Подготовка к ЕГЕ по Python">
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Описание*</label>
+                    <textarea id="description" name="description" required placeholder="Подробное описание курса"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="instructor">Преподаватель*</label>
+                    <input type="text" id="instructor" name="instructor" required placeholder="ФИО преподавателя">
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Категория*</label>
+                    <select id="category" name="category" required>
+                        <option value="">Выберите категорию</option>
+                        <option value="Python">Python</option>
+                        <option value="Java">Java</option>
+                        <option value="ЕГЕ">Подготовка к ЕГЕ</option>
+                        <option value="Information Security">Information Security</option>
+                        <option value="Web Design">Web Design</option>
+                        <option value="Цифровые технологии">Цифровые технологии</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="duration">Продолжительность (часов)*</label>
+                    <input type="number" id="duration" name="duration" required min="1" max="1000" placeholder="40">
+                </div>
+
+                <div class="form-group">
+                    <label for="price">Стоимость (₽)*</label>
+                    <input type="number" id="price" name="price" required min="0.01" step="0.01" placeholder="5000">
+                </div>
+
+                <div class="form-group">
+                    <label for="maxStudents">Максимум студентов*</label>
+                    <input type="number" id="maxStudents" name="maxStudents" required min="1" max="1000" placeholder="15">
+                </div>
+
+                <div class="form-group">
+                    <label for="startDate">Дата начала*</label>
+                    <input type="date" id="startDate" name="startDate" required>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="btn-primary" id="submitBtn">Создать Курс</button>
+                    <button type="button" class="btn-secondary" id="resetBtn">Очистить</button>
+                    <button type="button" class="btn-danger" id="cancelBtn" style="display: none;">Отменить</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- СПИСОК КУРСОВ -->
+        <div class="courses-section">
+            <div class="courses-header">
+                <h2>📖 Все Курсы</h2>
+            </div>
+
+            <div class="search-filter">
+                <input type="text" id="searchInput" placeholder="Поиск по названию или преподавателю...">
+                <select id="categoryFilter">
+                    <option value="">Все категории</option>
+                    <option value="Python">Python</option>
+                    <option value="Java">Java</option>
+                    <option value="ЕГЕ">Подготовка к ЕГЕ</option>
+                    <option value="Information Security">Information Security</option>
+                    <option value="Web Design">Web Design</option>
+                    <option value="Цифровые технологии">Цифровые технологии</option>
+                </select>
+            </div>
+
+            <div id="coursesList" class="courses-grid">
+                <div class="empty-state">
+                    <div class="empty-state-icon">📚</div>
+                    <p>Курсов нет. Добавьте первый курс!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const API_URL = 'http://localhost:8080/test/courses/course';
+    let editingCourseId = null; // Отслеживаем, какой курс редактируем
+
+    // Загрузить все курсы
+    async function loadCourses() {
+        try {
+            const response = await fetch(API_URL);
+            const courses = await response.json();
+            displayCourses(courses);
+        } catch (error) {
+            console.error('Ошибка загрузки курсов:', error);
+            showError('Ошибка при загрузке курсов');
+        }
+    }
+
+    // Отобразить курсы
+    function displayCourses(courses) {
+        const coursesList = document.getElementById('coursesList');
+
+        if (courses.length === 0) {
+            coursesList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📚</div>
+                        <p>Курсов нет. Добавьте первый курс!</p>
+                    </div>
+                `;
+            return;
+        }
+
+        coursesList.innerHTML = courses.map(course => `
+                <div class="course-card">
+                    <div class="course-header">
+                        <div class="course-title">${escapeHtml(course.title)}</div>
+                        <div class="course-price">${course.price}₽</div>
+                    </div>
+
+                    <div class="course-meta">
+                        <div class="meta-item">
+                            <span class="meta-label">👨‍🏫</span>
+                            <span>${escapeHtml(course.instructor)}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">⏱️</span>
+                            <span>${course.duration} часов</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">📂</span>
+                            <span><span class="badge">${escapeHtml(course.category)}</span></span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">👥</span>
+                            <span>${course.maxStudents} мест</span>
+                        </div>
+                    </div>
+
+                    <div class="course-meta">
+                        <div class="meta-item">
+                            <span class="meta-label">📅</span>
+                            <span>${new Date(course.startDate).toLocaleDateString('ru-RU')}</span>
+                        </div>
+                    </div>
+
+                    <div class="course-description">
+                        ${escapeHtml(course.description)}
+                    </div>
+
+                    <div class="course-footer">
+                        <button class="btn-small btn-edit" onclick="editCourse(${course.id})">✏️ Редактировать</button>
+                        <button class="btn-small btn-delete" onclick="deleteCourse(${course.id})">🗑️ Удалить</button>
+                    </div>
+                </div>
+            `).join('');
+    }
+
+    // Фильтрация курсов
+    function applyFilters() {
+        const searchValue = document.getElementById('searchInput').value.toLowerCase();
+        const categoryValue = document.getElementById('categoryFilter').value;
+
+        const cards = document.querySelectorAll('.course-card');
+        cards.forEach(card => {
+            const title = card.querySelector('.course-title').textContent.toLowerCase();
+            const instructor = card.querySelector('.meta-item:nth-child(1) span:last-child').textContent.toLowerCase();
+            const category = card.querySelector('.badge').textContent;
+
+            const matchSearch = title.includes(searchValue) || instructor.includes(searchValue);
+            const matchCategory = !categoryValue || category === categoryValue;
+
+            card.style.display = (matchSearch && matchCategory) ? 'block' : 'none';
+        });
+    }
+
+    // Создать/Обновить курс
+    document.getElementById('courseForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = {
+            title: document.getElementById('title').value,
+            description: document.getElementById('description').value,
+            instructor: document.getElementById('instructor').value,
+            duration: parseInt(document.getElementById('duration').value),
+            category: document.getElementById('category').value,
+            price: parseFloat(document.getElementById('price').value),
+            maxStudents: parseInt(document.getElementById('maxStudents').value),
+            startDate: document.getElementById('startDate').value
+        };
+
+        try {
+            let response;
+            let method;
+            let url;
+
+            // Если редактируем - отправляем PUT, иначе POST
+            if (editingCourseId) {
+                method = 'PUT';
+                url = `${API_URL}/${editingCourseId}`;
+            } else {
+                method = 'POST';
+                url = API_URL;
+            }
+
+            response = await fetch(url, {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.message || 'Ошибка при сохранении курса');
+            }
+
+            const message = editingCourseId ? 'Курс успешно обновлен!' : 'Курс успешно создан!';
+            showSuccess(message);
+
+            // Очистить форму и статус редактирования
+            clearEditingState();
+            loadCourses();
+        } catch (error) {
+            console.error('Ошибка:', error);
+            showError(error.message);
+        }
+    });
+
+    // Удалить курс
+    async function deleteCourse(id) {
+        if (!confirm('Вы уверены, что хотите удалить этот курс?')) return;
+
+        try {
+            const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+
+            if (!response.ok) throw new Error('Ошибка при удалении');
+
+            showSuccess('Курс удален!');
+
+            // Если удаляем редактируемый курс, очистить форму
+            if (editingCourseId === id) {
+                clearEditingState();
+            }
+
+            loadCourses();
+        } catch (error) {
+            console.error('Ошибка:', error);
+            showError('Ошибка при удалении курса');
+        }
+    }
+
+    // Редактировать курс (загрузить в форму)
+    async function editCourse(id) {
+        try {
+            const response = await fetch(`${API_URL}/${id}`);
+            const course = await response.json();
+
+            // Заполнить форму
+            document.getElementById('title').value = course.title;
+            document.getElementById('description').value = course.description;
+            document.getElementById('instructor').value = course.instructor;
+            document.getElementById('duration').value = course.duration;
+            document.getElementById('category').value = course.category;
+            document.getElementById('price').value = course.price;
+            document.getElementById('maxStudents').value = course.maxStudents;
+            document.getElementById('startDate').value = course.startDate;
+
+            // Установить режим редактирования
+            editingCourseId = id;
+            document.getElementById('formTitle').textContent = '✏️ Редактировать Курс';
+            document.getElementById('editingBadge').style.display = 'block';
+            document.getElementById('editingId').textContent = id;
+            document.getElementById('submitBtn').textContent = 'Сохранить Изменения';
+            document.getElementById('resetBtn').textContent = 'Очистить';
+            document.getElementById('cancelBtn').style.display = 'block';
+
+            // Скролл к форме
+            document.querySelector('.form-section').scrollIntoView({ behavior: 'smooth' });
+        } catch (error) {
+            console.error('Ошибка:', error);
+            showError('Ошибка при загрузке курса');
+        }
+    }
+
+    // Отменить редактирование
+    document.getElementById('cancelBtn').addEventListener('click', () => {
+        clearEditingState();
+    });
+
+    // Очистить форму и сбросить режим редактирования
+    function clearEditingState() {
+        editingCourseId = null;
+        document.getElementById('courseForm').reset();
+        document.getElementById('formTitle').textContent = '➕ Добавить Курс';
+        document.getElementById('editingBadge').style.display = 'none';
+        document.getElementById('submitBtn').textContent = 'Создать Курс';
+        document.getElementById('resetBtn').textContent = 'Очистить';
+        document.getElementById('cancelBtn').style.display = 'none';
+    }
+
+    // Обработка кнопки "Очистить"
+    document.getElementById('resetBtn').addEventListener('click', () => {
+        clearEditingState();
+    });
+
+    // Показать ошибку
+    function showError(message) {
+        const errorDiv = document.getElementById('errorMessage');
+        errorDiv.textContent = message;
+        errorDiv.style.display = 'block';
+        setTimeout(() => errorDiv.style.display = 'none', 5000);
+    }
+
+    // Показать успех
+    function showSuccess(message) {
+        const successDiv = document.getElementById('successMessage');
+        successDiv.textContent = message;
+        successDiv.style.display = 'block';
+        setTimeout(() => successDiv.style.display = 'none', 5000);
+    }
+
+    // Безопасный вывод текста
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // События фильтрации
+    document.getElementById('searchInput').addEventListener('input', applyFilters);
+    document.getElementById('categoryFilter').addEventListener('change', applyFilters);
+
+    // Загрузить курсы при загрузке страницы
+    loadCourses();
+</script>
+</body>
+</html>

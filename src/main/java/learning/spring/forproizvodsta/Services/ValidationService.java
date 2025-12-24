@@ -3,13 +3,18 @@ package learning.spring.forproizvodsta.Services;
 import learning.spring.forproizvodsta.MyExceptions.InvalidEmailException;
 import learning.spring.forproizvodsta.MyExceptions.InvalidPhoneException;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.regex.Pattern;
 
 @Service
-@Slf4j
+
 public class ValidationService {
+
+    private static final Logger log = LoggerFactory.getLogger(ValidationService.class);
+
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
     private static final Pattern PHONE_PATTERN = Pattern.compile("^\\+?[0-9]{9,15}$");
 

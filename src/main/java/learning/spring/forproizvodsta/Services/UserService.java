@@ -12,8 +12,12 @@ import learning.spring.forproizvodsta.Repository.Entity.Role;
 import learning.spring.forproizvodsta.Repository.Entity.RoleRepository;
 import learning.spring.forproizvodsta.Repository.Entity.User;
 import learning.spring.forproizvodsta.Repository.Entity.UserRepository;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import learning.spring.forproizvodsta.MyExceptions.AccessDeniedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import learning.spring.forproizvodsta.MyExceptions.RoleNotFoundException;
 import java.util.List;
@@ -32,8 +36,11 @@ import java.util.List;
  **/
 @Service
 @Transactional
-@Slf4j
+
 public class UserService {
+
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
+
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final ValidationService validationService;
@@ -44,7 +51,6 @@ public class UserService {
         this.roleRepository = roleRepository;
         this.validationService = validationService;
     }
-
     //                     |
                     /** CREATE **/
     //                     |
@@ -297,4 +303,6 @@ public class UserService {
             validationService.validatePhone(dto.getPhone());
         }
     }
+
+
 }

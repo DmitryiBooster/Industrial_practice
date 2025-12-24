@@ -15,4 +15,6 @@ public interface ClientsRegistrationsOnEventsRepository extends JpaRepository<Cl
     boolean existsByEventIdAndUserId(Long eventId, Long userId);
 
     Optional<ClientsRegistrationsOnEvents> findByEventIdAndUserId(Long eventId, Long userId);
+
+    long countByEventId(Long eventId);
 }

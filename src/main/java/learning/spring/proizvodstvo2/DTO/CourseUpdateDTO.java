@@ -50,7 +50,7 @@ public class CourseUpdateDTO {
     }
 
     @NotNull(message = "Start date cannot be null")
-    private String startDate;  // Строка, не LocalDate
+    private String startDate; 
 
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }

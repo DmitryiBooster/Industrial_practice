@@ -14,7 +14,6 @@ import learning.spring.forproizvodsta.Repository.Entity.User;
 import learning.spring.forproizvodsta.Repository.Entity.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import learning.spring.forproizvodsta.MyExceptions.AccessDeniedException;
-import org.hibernate.sql.results.jdbc.internal.JdbcValuesResultSetImpl;
 import org.springframework.stereotype.Service;
 import learning.spring.forproizvodsta.MyExceptions.RoleNotFoundException;
 import java.util.List;
@@ -53,8 +52,8 @@ public class UserService {
         log.info("Создание клиента с email: " + dto.getEmail());
         validateNewUser(dto);
 
-        Role clientRole = roleRepository.findByRole("CLIENT")
-                .orElseThrow(() -> new RoleNotFoundException("Пользователь с ролью 'CLIENT' не был найден"));
+        Role clientRole = roleRepository.findById(RoleConstants.CLIENT_ROLE_ID)
+                .orElseThrow(() -> new RoleNotFoundException("CLIENT роль не найдена"));
 
         User user = new User(
                 dto.getFirstName(),
@@ -78,8 +77,8 @@ public class UserService {
 
         validateNewTeacher(dto);
 
-        Role teacherRole = roleRepository.findByRole("TEACHER")
-                .orElseThrow(() -> new RoleNotFoundException("Пользователь с ролью 'TEACHER' не был найден"));
+        Role teacherRole = roleRepository.findById(RoleConstants.TEACHER_ROLE_ID)
+                .orElseThrow(() -> new RoleNotFoundException("TEACHER роль не найдена"));
 
         User user = new User(
                 dto.getFirstName(),
@@ -103,8 +102,8 @@ public class UserService {
 
         validateNewUser(dto);
 
-        Role adminRole = roleRepository.findByRole("ADMIN")
-                .orElseThrow(() -> new RoleNotFoundException("Пользователь с ролью 'ADMIN' не был найден"));
+        Role adminRole = roleRepository.findById(RoleConstants.ADMIN_ROLE_ID)
+                .orElseThrow(() -> new RoleNotFoundException("ADMIN роль не найдена"));
 
         User user = new User(
                 dto.getFirstName(),

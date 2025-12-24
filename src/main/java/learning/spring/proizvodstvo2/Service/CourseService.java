@@ -48,7 +48,6 @@ public class CourseService {
             }
         }
 
-        // Обновляем все поля
         course.setTitle(courseDetails.getTitle());
         course.setDescription(courseDetails.getDescription());
         course.setInstructor(courseDetails.getInstructor());
